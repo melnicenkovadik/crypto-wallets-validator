@@ -1,57 +1,42 @@
 name: Publish Package
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types: [closed]
 
 jobs:
   publish:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: main
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "melnicenkovadik"
+          git config --global user.email "melnicenkovadik@gmail.com"
+
+      - name: Bump version
+        run: |
+          npm version patch -m "chore: bump version to %s"
+          git push origin main --follow-tags
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
-
       - name: Build the project
         run: npm run build
 
-      - name: Clean working directory
-        run: |
-          git reset --hard
-          git clean -fd
-
-      - name: Set up Git user
-        run: |
-          git config --global user.email "your-email@example.com"
-          git config --global user.name "Your Name"
-
-      - name: Bump version and commit
-        run: |
-          # Увеличение минорной версии с уникальным идентификатором времени
-          NEW_VERSION=$(npm version minor --no-git-tag-version)
-          NEW_VERSION="${NEW_VERSION}-$GITHUB_RUN_NUMBER"
-          npm version $NEW_VERSION --no-git-tag-version
-          git add package.json package-lock.json
-          git commit -m "chore: bump version to $NEW_VERSION"
-          git push origin main
+      - name: Create .npmrc for npmjs.org
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish to npm
-        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
