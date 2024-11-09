@@ -1,4 +1,4 @@
-import { testBitcoin } from '../src/validation/address';
+import { testBitcoin } from "../validation/address";
 
 describe('bitcoinAddressRegex', () => {
     test('validP2PKHAddresses', () => {

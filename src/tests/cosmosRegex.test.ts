@@ -1,4 +1,4 @@
-import { testCosmos } from '../src/validation/address'
+import { testCosmos } from "../validation/address";
 
 describe('solanaAddressRegex', () => {
     test('validAddresses', () => {

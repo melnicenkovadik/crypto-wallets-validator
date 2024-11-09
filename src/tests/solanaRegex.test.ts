@@ -1,4 +1,4 @@
-import { testSolana } from '../src/validation/address';
+import { testSolana } from "../validation/address";
 
 describe('solanaAddressRegex', () => {
     test('validAddresses', () => {
