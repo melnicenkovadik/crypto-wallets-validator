@@ -1,5 +1,5 @@
 {
-  "version": "0.0.10",
+  "version": "0.0.11",
   "name": "crypto-wallets-validator",
   "description": "A simple utility to validate cryptocurrency wallet addresses for EVM, Solana, and Bitcoin chains.",
   "main": "dist/index.js",
@@ -40,4 +40,3 @@
     "typescript": "5.6.3"
   }
 }
-
