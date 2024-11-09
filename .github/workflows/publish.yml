@@ -1,36 +1,59 @@
 name: Publish Package
 
 on:
-  release:
-    types: [created]
+  pull_request:
+    branches:
+      - main
+    # Условие, чтобы запускаться только при мёрдже PR
+    types: [ closed ]
+    paths:
+      - main
 
 jobs:
   publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: main
+        # Логирование начала процесса
+        run: echo "Checking out the code..."
 
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
+        run: echo "Setting up Node.js..."
 
-      - name: Get version from release
+      - name: Install dependencies
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          git pull origin main
-          echo "Publishing version $VERSION"
+          echo "Installing dependencies..."
+          npm install
 
-      - run: npm install
+      - name: Run tests
+        run: |
+          echo "Running tests..."
+          npm test
+        # Workflow завершится, если тесты не прошли
+        continue-on-error: false
 
-      - run: npm test
+      - name: Increment patch version
+        run: |
+          echo "Updating patch version..."
+          npm version patch --no-git-tag-version
 
-      - run: npm run build
+      - name: Build the project
+        run: |
+          echo "Building the project..."
+          npm run build
 
-      - run: npm publish --access public
+      - name: Publish to npm
+        run: |
+          echo "Publishing to npm..."
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
