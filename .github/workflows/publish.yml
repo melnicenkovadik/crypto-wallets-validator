@@ -50,3 +50,8 @@ jobs:
       - name: Push changes
         if: ${{ success() || failure() }}
         run: git push origin main --follow-tags || true
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
