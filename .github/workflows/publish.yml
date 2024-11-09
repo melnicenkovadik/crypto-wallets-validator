@@ -1,26 +1,26 @@
 name: Publish Package
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types: [closed]
 
 jobs:
   publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "melnicenkovadik"
-          git config --global user.email "melnicenkovadik@gmail.com"
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: npm install
@@ -28,27 +28,25 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Build
+      - name: Build the project
         run: npm run build
 
-      - name: Ensure clean working directory
+      - name: Clean working directory
         run: |
-          git add .
-          git commit -m "chore: interim commit to clean working directory" || true
+          git reset --hard
+          git clean -fd
 
-      - name: Bump version
+      - name: Set up Git user
         run: |
-          npm version patch -m "chore: bump version to %s"
+          git config --global user.email "your-email@example.com"
+          git config --global user.name "Your Name"
 
-      - name: Commit version bump
-        if: ${{ success() || failure() }}
+      - name: Bump version and commit
         run: |
+          npm version patch --force
           git add package.json package-lock.json
-          git commit -m "chore: commit version bump" || true
-
-      - name: Push changes
-        if: ${{ success() || failure() }}
-        run: git push origin main --follow-tags || true
+          git commit -m "chore: bump version" || echo "No changes to commit"
+          git push origin main || echo "Nothing to push"
 
       - name: Publish to npm
         run: npm publish --access public
