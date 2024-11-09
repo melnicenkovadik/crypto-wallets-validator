@@ -32,6 +32,13 @@ jobs:
         run: npm run build
 
       - name: Bump version
-        run: |
+        run:
           npm version patch -m "chore: bump version to %s"
-          git push origin main --follow-tags
+
+      - name: Commit version bump
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore: commit version bump"
+
+      - name: Push changes
+        run: git push origin main --follow-tags
