@@ -1,5 +1,5 @@
 {
-  "version": "0.0.126",
+  "version": "0.1.4",
   "name": "crypto-wallets-validator",
   "description": "A simple utility to validate cryptocurrency wallet addresses for EVM, Solana, and Bitcoin chains.",
   "main": "dist/index.js",
@@ -10,7 +10,6 @@
     "lint": "tsc",
     "setup": "npm i && npm run build",
     "test": "npm run setup && npm run lint && jest",
-    "publish": "npm test && npm publish --access public",
     "update-with-parent": "./scripts/update-with-parent-branch.sh"
   },
   "publishConfig": {
