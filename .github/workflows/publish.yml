@@ -31,6 +31,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # New step to commit any uncommitted changes
+      - name: Ensure clean working directory
+        run: |
+          git add .
+          git commit -m "chore: interim commit to clean working directory" || true
+
       - name: Bump version
         run: |
           npm version patch -m "chore: bump version to %s"
