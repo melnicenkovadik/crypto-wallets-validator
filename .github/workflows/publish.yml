@@ -43,10 +43,10 @@ jobs:
 
       - name: Bump version and commit
         run: |
-          npm version patch
+          npm version patch --force
           git add package.json package-lock.json
-          git commit -m "chore: bump version"
-          git push origin main
+          git commit -m "chore: bump version" || echo "No changes to commit"
+          git push origin main || echo "Nothing to push"
 
       - name: Publish to npm
         run: npm publish --access public
