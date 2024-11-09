@@ -1,5 +1,5 @@
 {
-  "version": "0.0.120",
+  "version": "0.0.125",
   "name": "crypto-wallets-validator",
   "description": "A simple utility to validate cryptocurrency wallet addresses for EVM, Solana, and Bitcoin chains.",
   "main": "dist/index.js",
@@ -12,6 +12,9 @@
     "test": "npm run setup && npm run lint && jest",
     "publish": "npm test && npm publish --access public",
     "update-with-parent": "./scripts/update-with-parent-branch.sh"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
