@@ -31,7 +31,14 @@ jobs:
       - name: Build the project
         run: npm run build
 
+      - name: Bump version and commit
+        run: |
+          npm version patch
+          git add package.json package-lock.json
+          git commit -m "chore: bump version"
+          git push origin main
+
       - name: Publish to npm
-        run: npm version patch && npm publish --access public
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
