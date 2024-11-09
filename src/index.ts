@@ -24,6 +24,7 @@ export const isWalletValid = (address: string): WalletValidationResponse => {
 
 type IsValidAddressType = string | WalletValidationResponse | null;
 
+// Function to check crypto and return address if valid
 export function validate(address: string): IsValidAddressType {
     const validation = isWalletValid(address);
 
