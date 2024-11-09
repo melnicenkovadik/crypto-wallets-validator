@@ -10,7 +10,6 @@
     "lint": "tsc",
     "setup": "npm i && npm run build",
     "test": "npm run setup && npm run lint && jest",
-    "publish": "npm test && npm publish --access public",
     "update-with-parent": "./scripts/update-with-parent-branch.sh"
   },
   "publishConfig": {
