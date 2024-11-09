@@ -32,7 +32,7 @@ jobs:
         run: npm run build
 
       - name: Bump version
-        run:
+        run: |
           npm version patch -m "chore: bump version to %s"
 
       - name: Commit version bump
