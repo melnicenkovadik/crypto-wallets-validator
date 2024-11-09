@@ -23,44 +23,25 @@ jobs:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Log - Installing dependencies
-        run: echo "Installing dependencies..."
-
       - name: Install dependencies
         run: npm install
-
-      - name: Log - Running tests
-        run: echo "Running tests..."
 
       - name: Run tests
         run: npm test
         continue-on-error: false
 
-      - name: Log - Incrementing patch version
-        run: echo "Updating patch version..."
-
-      - name: Increment patch version
+      - name: Increment version for temporary publish
         run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          NEW_VERSION=$(npm version patch --no-git-tag-version)
-          echo "Updated version from $CURRENT_VERSION to $NEW_VERSION"
-
-      - name: Commit and push version change
-        run: |
-          git config --local user.name "GitHub Actions"
-          git config --local user.email "actions@github.com"
-          git add package.json package-lock.json
-          git commit -m "chore: bump version to $NEW_VERSION"
-          git push origin main
+          TIMESTAMP=$(date +%s)
+          npm version patch --no-git-tag-version
+          TEMP_VERSION=$(node -p "require('./package.json').version + '-$TIMESTAMP'")
+          jq ".version=\"$TEMP_VERSION\"" package.json > tmp.json && mv tmp.json package.json
+          echo "Publishing version $TEMP_VERSION"
 
       - name: Build the project
-        run: |
-          echo "Building the project..."
-          npm run build
+        run: npm run build
 
       - name: Publish to npm
-        run: |
-          echo "Publishing to npm..."
-          npm publish --access public
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
