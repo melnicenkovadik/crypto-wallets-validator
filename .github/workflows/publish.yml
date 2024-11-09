@@ -36,9 +36,11 @@ jobs:
           npm version patch -m "chore: bump version to %s"
 
       - name: Commit version bump
+        if: success() || failure()
         run: |
           git add package.json package-lock.json
-          git commit -m "chore: commit version bump" || echo "No changes to commit"
+          git commit -m "chore: commit version bump" || true
 
       - name: Push changes
-        run: git push origin main --follow-tags
+        if: success() || failure()
+        run: git push origin main --follow-tags || true
