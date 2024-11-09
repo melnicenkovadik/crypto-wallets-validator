@@ -45,6 +45,14 @@ jobs:
           NEW_VERSION=$(npm version patch --no-git-tag-version)
           echo "Updated version from $CURRENT_VERSION to $NEW_VERSION"
 
+      - name: Commit and push version change
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $NEW_VERSION"
+          git push origin main
+
       - name: Build the project
         run: |
           echo "Building the project..."
