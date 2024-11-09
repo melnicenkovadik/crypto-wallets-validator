@@ -43,7 +43,12 @@ jobs:
 
       - name: Bump version and commit
         run: |
-          npm version patch --force
+          # Увеличение минорной версии с уникальным идентификатором времени
+          NEW_VERSION=$(npm version minor --no-git-tag-version)
+          NEW_VERSION="${NEW_VERSION}-$GITHUB_RUN_NUMBER"
+          npm version $NEW_VERSION --no-git-tag-version
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $NEW_VERSION"
           git push origin main
 
       - name: Publish to npm
