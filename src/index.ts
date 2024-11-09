@@ -28,6 +28,7 @@ type IsValidAddressType = string | WalletValidationResponse | null;
 export function validate(address: string): IsValidAddressType {
     const validation = isWalletValid(address);
 
+    // If the address is valid, return it
     if (validation?.valid) {
         return address;
     } else {
