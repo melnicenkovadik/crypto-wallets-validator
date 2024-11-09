@@ -31,6 +31,11 @@ jobs:
       - name: Build the project
         run: npm run build
 
+      - name: Clean working directory
+        run: |
+          git reset --hard
+          git clean -fd
+
       - name: Bump version and commit
         run: |
           npm version patch
