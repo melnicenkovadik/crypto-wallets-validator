@@ -22,19 +22,16 @@ jobs:
           git config --global user.name "melnicenkovadik"
           git config --global user.email "melnicenkovadik@gmail.com"
 
-          - name: Install dependencies
-      - run: npm install
+      - name: Install dependencies
+        run: npm install
 
       - name: Run tests
-      - run: npm test
+        run: npm test
 
       - name: Build
-      - run: npm run build
+        run: npm run build
 
       - name: Bump version
         run: |
           npm version patch -m "chore: bump version to %s"
           git push origin main --follow-tags
-
-     
-
